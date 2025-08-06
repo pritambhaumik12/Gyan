@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GyanSetu</title>
+    <!-- Materialize CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <!-- Animate.css for animations -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet"/>
+    <style>
+      body.dark-mode {
+        background-color: #121212;
+        color: #eee;
+      }
+    </style>
+    <?!= include('ClientJS'); ?>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="blue">
+      <div class="nav-wrapper container">
+        <a href="#" class="brand-logo">GyanSetu</a>
+        <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+        <ul class="right hide-on-med-and-down" id="nav-links">
+          <!-- Dynamic links injected by JS -->
+        </ul>
+      </div>
+    </nav>
+    <ul class="sidenav" id="mobile-demo"></ul>
+
+    <main class="container" id="app" style="margin-top: 20px;">
+      <!-- Views injected here -->
+    </main>
+
+    <!-- Materialize JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  </body>
+</html>
