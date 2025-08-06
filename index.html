@@ -1,0 +1,2224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GyanSetu - Bridging the Gap Between You and Your Goals</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --accent-color: #3b82f6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Loading Spinner */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--border-color);
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1rem 0;
+            box-shadow: var(--shadow-lg);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-icon {
+            padding: 0.5rem;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* Pages */
+        .page {
+            display: none;
+            min-height: calc(100vh - 80px);
+            padding: 2rem 0;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-grid {
+            display: grid;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border-color);
+            border-radius: 0.5rem;
+            background: var(--card-bg);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border-color);
+            border-radius: 0.5rem;
+            background: var(--card-bg);
+            color: var(--text-primary);
+        }
+
+        /* Search and Filters */
+        .search-section {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        .search-bar {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .search-input {
+            padding-left: 3rem;
+            font-size: 1.1rem;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        /* Book Cards */
+        .book-card {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .book-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .book-cover {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .book-info {
+            padding: 1.5rem;
+        }
+
+        .book-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .book-author {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .book-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .meta-tag {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+        }
+
+        .book-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .bookmark-btn {
+            background: none;
+            border: none;
+            color: var(--warning-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .bookmark-btn.active {
+            color: var(--warning-color);
+            transform: scale(1.2);
+        }
+
+        /* Dashboard Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: rotate(45deg);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Tables */
+        .table-container {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table th {
+            background: var(--bg-color);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .table tbody tr:hover {
+            background: var(--bg-color);
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--success-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            color: white;
+            z-index: 10000;
+            animation: slideIn 0.3s ease;
+            max-width: 400px;
+        }
+
+        .notification.success {
+            background: var(--success-color);
+        }
+
+        .notification.error {
+            background: var(--danger-color);
+        }
+
+        .notification.warning {
+            background: var(--warning-color);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-buttons {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+
+        .slide-up {
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Hide/Show classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .visible {
+            display: block;
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            text-align: center;
+            padding: 4rem 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            margin: -2rem -20px 2rem -20px;
+            border-radius: 0 0 2rem 2rem;
+        }
+
+        .welcome-title {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .quick-action {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quick-action:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Spinner -->
+    <div class="loader" id="loader">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    GyanSetu
+                </div>
+                <div class="nav-buttons">
+                    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Theme">
+                        <i class="fas fa-moon" id="themeIcon"></i>
+                    </button>
+                    <div id="guestNav" class="nav-buttons">
+                        <button class="btn btn-secondary" onclick="showLogin()">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                        <button class="btn btn-primary" onclick="showRegister()">
+                            <i class="fas fa-user-plus"></i> Register
+                        </button>
+                    </div>
+                    <div id="userNav" class="nav-buttons hidden">
+                        <span id="welcomeUser"></span>
+                        <button class="btn btn-secondary" onclick="showProfile()">
+                            <i class="fas fa-user"></i> Profile
+                        </button>
+                        <button class="btn btn-danger" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                    <div id="adminNav" class="nav-buttons hidden">
+                        <span id="welcomeAdmin"></span>
+                        <button class="btn btn-secondary" onclick="showDashboard()">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </button>
+                        <button class="btn btn-secondary" onclick="showBooks()">
+                            <i class="fas fa-book"></i> Books
+                        </button>
+                        <button class="btn btn-secondary" onclick="showUsers()">
+                            <i class="fas fa-users"></i> Users
+                        </button>
+                        <button class="btn btn-danger" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Welcome Page -->
+        <div id="welcomePage" class="page active">
+            <div class="welcome-section slide-up">
+                <h1 class="welcome-title">Welcome to GyanSetu</h1>
+                <p class="welcome-subtitle">Bridging the Gap Between You and Your Goals. Access thousands of educational resources and build your knowledge journey.</p>
+                <div class="quick-actions">
+                    <a href="#" class="quick-action" onclick="showRegister()">
+                        <i class="fas fa-user-plus"></i> Get Started
+                    </a>
+                    <a href="#" class="quick-action" onclick="showLogin()">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                </div>
+            </div>
+
+            <div class="stats-grid fade-in">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalBooks">0</div>
+                    <div class="stat-label">Books Available</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalUsers">0</div>
+                    <div class="stat-label">Registered Users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalDownloads">0</div>
+                    <div class="stat-label">Total Downloads</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Page -->
+        <div id="loginPage" class="page">
+            <div class="card" style="max-width: 400px; margin: 0 auto;">
+                <h2 style="text-align: center; margin-bottom: 2rem;">
+                    <i class="fas fa-sign-in-alt"></i> Login to GyanSetu
+                </h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="loginPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                    </div>
+                    <div style="text-align: center;">
+                        <a href="#" onclick="showForgotPassword()" style="color: var(--primary-color);">Forgot Password?</a>
+                        <br><br>
+                        Don't have an account? 
+                        <a href="#" onclick="showRegister()" style="color: var(--primary-color);">Register here</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Register Page -->
+        <div id="registerPage" class="page">
+            <div class="card" style="max-width: 400px; margin: 0 auto;">
+                <h2 style="text-align: center; margin-bottom: 2rem;">
+                    <i class="fas fa-user-plus"></i> Join GyanSetu
+                </h2>
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-input" id="registerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" id="registerEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="registerPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Confirm Password</label>
+                        <input type="password" class="form-input" id="registerConfirmPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <i class="fas fa-user-plus"></i> Create Account
+                        </button>
+                    </div>
+                    <div style="text-align: center;">
+                        Already have an account? 
+                        <a href="#" onclick="showLogin()" style="color: var(--primary-color);">Login here</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- User Dashboard -->
+        <div id="userDashboard" class="page">
+            <div class="welcome-section slide-up">
+                <h1 class="welcome-title">My GyanSetu</h1>
+                <p class="welcome-subtitle" id="userWelcomeText">Welcome back! Continue your learning journey.</p>
+            </div>
+
+            <!-- Announcements -->
+            <div id="announcementsSection" class="card" style="margin-bottom: 2rem;">
+                <h3><i class="fas fa-bullhorn"></i> Latest Announcements</h3>
+                <div id="announcements"></div>
+            </div>
+
+            <!-- Recently Viewed -->
+            <div class="card" style="margin-bottom: 2rem;">
+                <h3><i class="fas fa-clock"></i> Recently Viewed</h3>
+                <div id="recentlyViewed" class="card-grid grid-4"></div>
+            </div>
+
+            <!-- Search and Filters -->
+            <div class="search-section">
+                <div class="search-bar">
+                    <input type="text" class="form-input search-input" id="searchInput" placeholder="Search books by title or author...">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                <div class="filters">
+                    <div class="form-group">
+                        <label class="form-label">Class</label>
+                        <select class="form-select" id="classFilter">
+                            <option value="">All Classes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Subject</label>
+                        <select class="form-select" id="subjectFilter">
+                            <option value="">All Subjects</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Type</label>
+                        <select class="form-select" id="typeFilter">
+                            <option value="">All Types</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Genre</label>
+                        <select class="form-select" id="genreFilter">
+                            <option value="">All Genres</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommendations -->
+            <div class="card" style="margin-bottom: 2rem;">
+                <h3><i class="fas fa-star"></i> Recommended for You</h3>
+                <div id="recommendations" class="card-grid grid-4"></div>
+            </div>
+
+            <!-- Books Grid -->
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h3><i class="fas fa-book"></i> All Books</h3>
+                    <button class="btn btn-secondary" onclick="showBookmarks()">
+                        <i class="fas fa-bookmark"></i> My Bookmarks
+                    </button>
+                </div>
+                <div id="booksGrid" class="card-grid grid-3"></div>
+            </div>
+        </div>
+
+        <!-- Bookmarks Page -->
+        <div id="bookmarksPage" class="page">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2><i class="fas fa-bookmark"></i> My Bookmarks</h2>
+                    <button class="btn btn-secondary" onclick="showDashboard()">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </button>
+                </div>
+                <div id="bookmarksGrid" class="card-grid grid-3"></div>
+            </div>
+        </div>
+
+        <!-- Profile Page -->
+        <div id="profilePage" class="page">
+            <div class="card" style="max-width: 500px; margin: 0 auto;">
+                <h2 style="text-align: center; margin-bottom: 2rem;">
+                    <i class="fas fa-user"></i> My Profile
+                </h2>
+                <form id="profileForm">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-input" id="profileName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" id="profileEmail" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">New Password (leave blank to keep current)</label>
+                        <input type="password" class="form-input" id="profilePassword">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Confirm New Password</label>
+                        <input type="password" class="form-input" id="profileConfirmPassword">
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Update Profile
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="showDashboard()">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Admin Dashboard -->
+        <div id="adminDashboard" class="page">
+            <div class="welcome-section slide-up">
+                <h1 class="welcome-title">Admin Dashboard</h1>
+                <p class="welcome-subtitle">Complete control center for GyanSetu platform</p>
+            </div>
+
+            <div class="stats-grid fade-in">
+                <div class="stat-card">
+                    <div class="stat-number" id="adminTotalBooks">0</div>
+                    <div class="stat-label">Total Books</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="adminTotalUsers">0</div>
+                    <div class="stat-label">Total Users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="adminTotalDownloads">0</div>
+                    <div class="stat-label">Total Downloads</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="adminNewUsers">0</div>
+                    <div class="stat-label">New Users (30 days)</div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card-grid grid-2">
+                <div class="card">
+                    <h3><i class="fas fa-plus"></i> Quick Actions</h3>
+                    <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;">
+                        <button class="btn btn-primary" onclick="showAddBook()">
+                            <i class="fas fa-plus"></i> Add New Book
+                        </button>
+                        <button class="btn btn-success" onclick="showAnnouncements()">
+                            <i class="fas fa-bullhorn"></i> Manage Announcements
+                        </button>
+                        <button class="btn btn-warning" onclick="showCategories()">
+                            <i class="fas fa-tags"></i> Manage Categories
+                        </button>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3><i class="fas fa-chart-line"></i> Analytics Overview</h3>
+                    <div id="analyticsOverview"></div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card">
+                <h3><i class="fas fa-clock"></i> Recent Activity</h3>
+                <div id="recentActivity"></div>
+            </div>
+        </div>
+
+        <!-- Books Management -->
+        <div id="booksManagement" class="page">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2><i class="fas fa-book"></i> Books Management</h2>
+                    <div>
+                        <button class="btn btn-primary" onclick="showAddBook()">
+                            <i class="fas fa-plus"></i> Add Book
+                        </button>
+                        <button class="btn btn-secondary" onclick="showAdminDashboard()">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>Class</th>
+                                <th>Subject</th>
+                                <th>Downloads</th>
+                                <th>Visible</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="booksTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Users Management -->
+        <div id="usersManagement" class="page">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2><i class="fas fa-users"></i> Users Management</h2>
+                    <button class="btn btn-secondary" onclick="showAdminDashboard()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Registration Date</th>
+                                <th>Books Downloaded</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Add/Edit Book Modal -->
+    <div id="bookModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="bookModalTitle">Add New Book</h3>
+                <button class="close-btn" onclick="closeModal('bookModal')">&times;</button>
+            </div>
+            <form id="bookForm">
+                <input type="hidden" id="bookId">
+                <div class="form-group">
+                    <label class="form-label">Title</label>
+                    <input type="text" class="form-input" id="bookTitle" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Author</label>
+                    <input type="text" class="form-input" id="bookAuthor" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Class</label>
+                    <select class="form-select" id="bookClass" required>
+                        <option value="">Select Class</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Subject</label>
+                    <select class="form-select" id="bookSubject" required>
+                        <option value="">Select Subject</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Type</label>
+                    <select class="form-select" id="bookType" required>
+                        <option value="">Select Type</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Genre</label>
+                    <select class="form-select" id="bookGenre" required>
+                        <option value="">Select Genre</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-input" id="bookDescription" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">PDF URL</label>
+                    <input type="url" class="form-input" id="bookPdfUrl" required>
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('bookModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Book</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- User Details Modal -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">User Details</h3>
+                <button class="close-btn" onclick="closeModal('userModal')">&times;</button>
+            </div>
+            <div id="userDetails"></div>
+        </div>
+    </div>
+
+    <!-- Book Details Modal -->
+    <div id="bookDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="bookDetailsTitle">Book Details</h3>
+                <button class="close-btn" onclick="closeModal('bookDetailsModal')">&times;</button>
+            </div>
+            <div id="bookDetailsContent"></div>
+        </div>
+    </div>
+
+    <!-- Notes Modal -->
+    <div id="notesModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">My Notes</h3>
+                <button class="close-btn" onclick="closeModal('notesModal')">&times;</button>
+            </div>
+            <form id="notesForm">
+                <input type="hidden" id="notesBookId">
+                <div class="form-group">
+                    <label class="form-label">Notes</label>
+                    <textarea class="form-input" id="notesContent" rows="10" placeholder="Add your personal notes here..."></textarea>
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('notesModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Notes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentUser = null;
+        let currentPage = 'welcome';
+        let books = [];
+        let users = [];
+        let bookmarks = [];
+        let userNotes = {};
+        let recentlyViewed = [];
+        let categories = {
+            classes: ['Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10', 'Class 11', 'Class 12'],
+            subjects: ['Mathematics', 'Science', 'English', 'Hindi', 'Social Science', 'Computer Science', 'Physics', 'Chemistry', 'Biology'],
+            types: ['Textbook', 'Reference Book', 'Question Bank', 'Study Guide', 'Previous Year Papers', 'Sample Papers'],
+            genres: ['Academic', 'Competitive Exam', 'General Knowledge', 'Literature', 'Technical', 'Research']
+        };
+        let announcements = [];
+
+        // Initialize application
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+
+        async function initializeApp() {
+            showLoader();
+            
+            // Simulate data loading
+            await loadData();
+            
+            // Initialize theme
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+            
+            // Check for existing session
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                if (currentUser.isAdmin) {
+                    showAdminDashboard();
+                } else {
+                    showUserDashboard();
+                }
+            } else {
+                showWelcome();
+            }
+            
+            hideLoader();
+            
+            // Initialize event listeners
+            initializeEventListeners();
+        }
+
+        function initializeEventListeners() {
+            // Login form
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            
+            // Register form
+            document.getElementById('registerForm').addEventListener('submit', handleRegister);
+            
+            // Profile form
+            document.getElementById('profileForm').addEventListener('submit', handleUpdateProfile);
+            
+            // Book form
+            document.getElementById('bookForm').addEventListener('submit', handleSaveBook);
+            
+            // Notes form
+            document.getElementById('notesForm').addEventListener('submit', handleSaveNotes);
+            
+            // Search functionality
+            document.getElementById('searchInput').addEventListener('input', handleSearch);
+            
+            // Filter changes
+            ['classFilter', 'subjectFilter', 'typeFilter', 'genreFilter'].forEach(id => {
+                document.getElementById(id).addEventListener('change', handleSearch);
+            });
+        }
+
+        async function loadData() {
+            // Simulate API calls to Google Apps Script
+            // In real implementation, these would be actual API calls
+            
+            // Load sample data
+            books = [
+                {
+                    id: '1',
+                    title: 'Mathematics Grade 10',
+                    author: 'Dr. John Smith',
+                    class: 'Class 10',
+                    subject: 'Mathematics',
+                    type: 'Textbook',
+                    genre: 'Academic',
+                    description: 'Comprehensive mathematics textbook for grade 10 students.',
+                    pdfUrl: 'https://example.com/math-grade-10.pdf',
+                    downloads: 150,
+                    visible: true,
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: '2',
+                    title: 'Science Fundamentals',
+                    author: 'Prof. Jane Doe',
+                    class: 'Class 9',
+                    subject: 'Science',
+                    type: 'Reference Book',
+                    genre: 'Academic',
+                    description: 'Essential science concepts for grade 9 students.',
+                    pdfUrl: 'https://example.com/science-fundamentals.pdf',
+                    downloads: 200,
+                    visible: true,
+                    createdAt: new Date().toISOString()
+                }
+            ];
+            
+            users = [
+                {
+                    id: '1',
+                    name: 'Test User',
+                    email: 'user@test.com',
+                    password: 'password123',
+                    registrationDate: new Date().toISOString(),
+                    booksDownloaded: 5,
+                    status: 'active'
+                }
+            ];
+            
+            announcements = [
+                {
+                    id: '1',
+                    title: 'Welcome to GyanSetu!',
+                    content: 'We are excited to have you join our learning community.',
+                    date: new Date().toISOString(),
+                    active: true
+                }
+            ];
+            
+            // Populate filter dropdowns
+            populateFilters();
+            
+            // Update stats
+            updateStats();
+        }
+
+        function populateFilters() {
+            // Populate class filter
+            const classFilter = document.getElementById('classFilter');
+            const bookClass = document.getElementById('bookClass');
+            categories.classes.forEach(cls => {
+                const option1 = new Option(cls, cls);
+                const option2 = new Option(cls, cls);
+                classFilter.appendChild(option1);
+                if (bookClass) bookClass.appendChild(option2);
+            });
+            
+            // Populate subject filter
+            const subjectFilter = document.getElementById('subjectFilter');
+            const bookSubject = document.getElementById('bookSubject');
+            categories.subjects.forEach(subject => {
+                const option1 = new Option(subject, subject);
+                const option2 = new Option(subject, subject);
+                subjectFilter.appendChild(option1);
+                if (bookSubject) bookSubject.appendChild(option2);
+            });
+            
+            // Populate type filter
+            const typeFilter = document.getElementById('typeFilter');
+            const bookType = document.getElementById('bookType');
+            categories.types.forEach(type => {
+                const option1 = new Option(type, type);
+                const option2 = new Option(type, type);
+                typeFilter.appendChild(option1);
+                if (bookType) bookType.appendChild(option2);
+            });
+            
+            // Populate genre filter
+            const genreFilter = document.getElementById('genreFilter');
+            const bookGenre = document.getElementById('bookGenre');
+            categories.genres.forEach(genre => {
+                const option1 = new Option(genre, genre);
+                const option2 = new Option(genre, genre);
+                genreFilter.appendChild(option1);
+                if (bookGenre) bookGenre.appendChild(option2);
+            });
+        }
+
+        function updateStats() {
+            document.getElementById('totalBooks').textContent = books.filter(b => b.visible).length;
+            document.getElementById('totalUsers').textContent = users.length;
+            document.getElementById('totalDownloads').textContent = books.reduce((sum, book) => sum + book.downloads, 0);
+            
+            // Admin stats
+            if (document.getElementById('adminTotalBooks')) {
+                document.getElementById('adminTotalBooks').textContent = books.length;
+                document.getElementById('adminTotalUsers').textContent = users.length;
+                document.getElementById('adminTotalDownloads').textContent = books.reduce((sum, book) => sum + book.downloads, 0);
+                document.getElementById('adminNewUsers').textContent = users.filter(u => {
+                    const regDate = new Date(u.registrationDate);
+                    const thirtyDaysAgo = new Date();
+                    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+                    return regDate > thirtyDaysAgo;
+                }).length;
+            }
+        }
+
+        // Page navigation functions
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+            currentPage = pageId;
+        }
+
+        function showWelcome() {
+            showPage('welcomePage');
+            document.getElementById('guestNav').classList.remove('hidden');
+            document.getElementById('userNav').classList.add('hidden');
+            document.getElementById('adminNav').classList.add('hidden');
+        }
+
+        function showLogin() {
+            showPage('loginPage');
+        }
+
+        function showRegister() {
+            showPage('registerPage');
+        }
+
+        function showUserDashboard() {
+            showPage('userDashboard');
+            document.getElementById('guestNav').classList.add('hidden');
+            document.getElementById('userNav').classList.remove('hidden');
+            document.getElementById('adminNav').classList.add('hidden');
+            
+            if (currentUser) {
+                document.getElementById('welcomeUser').textContent = `Welcome, ${currentUser.name}!`;
+                document.getElementById('userWelcomeText').textContent = `Welcome back, ${currentUser.name}! Continue your learning journey.`;
+                loadUserDashboard();
+            }
+        }
+
+        function showAdminDashboard() {
+            showPage('adminDashboard');
+            document.getElementById('guestNav').classList.add('hidden');
+            document.getElementById('userNav').classList.add('hidden');
+            document.getElementById('adminNav').classList.remove('hidden');
+            
+            if (currentUser) {
+                document.getElementById('welcomeAdmin').textContent = `Admin: ${currentUser.name}`;
+                loadAdminDashboard();
+            }
+        }
+
+        function showDashboard() {
+            if (currentUser && currentUser.isAdmin) {
+                showAdminDashboard();
+            } else {
+                showUserDashboard();
+            }
+        }
+
+        function showBooks() {
+            showPage('booksManagement');
+            loadBooksManagement();
+        }
+
+        function showUsers() {
+            showPage('usersManagement');
+            loadUsersManagement();
+        }
+
+        function showProfile() {
+            showPage('profilePage');
+            loadProfile();
+        }
+
+        function showBookmarks() {
+            showPage('bookmarksPage');
+            loadBookmarks();
+        }
+
+        function showForgotPassword() {
+            showNotification('Forgot password functionality will be implemented with email service.', 'warning');
+        }
+
+        // Authentication functions
+        async function handleLogin(e) {
+            e.preventDefault();
+            showLoader();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Admin login check
+            if (email === 'admin@gyansetu.com' && password === 'admin123') {
+                currentUser = {
+                    id: 'admin',
+                    name: 'Administrator',
+                    email: email,
+                    isAdmin: true
+                };
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                showNotification('Welcome, Administrator!', 'success');
+                showAdminDashboard();
+            } else {
+                // Regular user login
+                const user = users.find(u => u.email === email && u.password === password);
+                if (user) {
+                    currentUser = {
+                        id: user.id,
+                        name: user.name,
+                        email: user.email,
+                        isAdmin: false
+                    };
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    showNotification(`Welcome back, ${user.name}!`, 'success');
+                    showUserDashboard();
+                } else {
+                    showNotification('Invalid email or password!', 'error');
+                }
+            }
+            
+            hideLoader();
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            showLoader();
+            
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                showNotification('Passwords do not match!', 'error');
+                hideLoader();
+                return;
+            }
+            
+            // Check if email already exists
+            if (users.find(u => u.email === email)) {
+                showNotification('Email already exists!', 'error');
+                hideLoader();
+                return;
+            }
+            
+            // Create new user
+            const newUser = {
+                id: Date.now().toString(),
+                name: name,
+                email: email,
+                password: password,
+                registrationDate: new Date().toISOString(),
+                booksDownloaded: 0,
+                status: 'active'
+            };
+            
+            users.push(newUser);
+            
+            currentUser = {
+                id: newUser.id,
+                name: newUser.name,
+                email: newUser.email,
+                isAdmin: false
+            };
+            
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            showNotification('Registration successful! Welcome to GyanSetu!', 'success');
+            showUserDashboard();
+            updateStats();
+            
+            hideLoader();
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            bookmarks = [];
+            userNotes = {};
+            recentlyViewed = [];
+            showNotification('Logged out successfully!', 'success');
+            showWelcome();
+        }
+
+        // User dashboard functions
+        function loadUserDashboard() {
+            loadAnnouncements();
+            loadRecentlyViewed();
+            loadRecommendations();
+            loadBooks();
+        }
+
+        function loadAnnouncements() {
+            const announcementsDiv = document.getElementById('announcements');
+            const activeAnnouncements = announcements.filter(a => a.active);
+            
+            if (activeAnnouncements.length === 0) {
+                announcementsDiv.innerHTML = '<p style="color: var(--text-secondary);">No announcements at this time.</p>';
+                return;
+            }
+            
+            announcementsDiv.innerHTML = activeAnnouncements.map(announcement => `
+                <div class="card" style="margin-bottom: 1rem; padding: 1rem;">
+                    <h4>${announcement.title}</h4>
+                    <p>${announcement.content}</p>
+                    <small style="color: var(--text-secondary);">${new Date(announcement.date).toLocaleDateString()}</small>
+                </div>
+            `).join('');
+        }
+
+        function loadRecentlyViewed() {
+            const recentlyViewedDiv = document.getElementById('recentlyViewed');
+            
+            if (recentlyViewed.length === 0) {
+                recentlyViewedDiv.innerHTML = '<p style="color: var(--text-secondary);">No recently viewed books.</p>';
+                return;
+            }
+            
+            const recentBooks = recentlyViewed.slice(0, 4).map(bookId => 
+                books.find(b => b.id === bookId)
+            ).filter(Boolean);
+            
+            recentlyViewedDiv.innerHTML = recentBooks.map(book => createBookCard(book)).join('');
+        }
+
+        function loadRecommendations() {
+            const recommendationsDiv = document.getElementById('recommendations');
+            
+            // Simple recommendation logic based on user's viewed books
+            let recommendedBooks = [];
+            
+            if (recentlyViewed.length > 0) {
+                const viewedBook = books.find(b => b.id === recentlyViewed[0]);
+                if (viewedBook) {
+                    recommendedBooks = books.filter(b => 
+                        b.id !== viewedBook.id && 
+                        (b.class === viewedBook.class || b.subject === viewedBook.subject) &&
+                        b.visible
+                    ).slice(0, 4);
+                }
+            }
+            
+            if (recommendedBooks.length === 0) {
+                recommendedBooks = books.filter(b => b.visible).slice(0, 4);
+            }
+            
+            recommendationsDiv.innerHTML = recommendedBooks.map(book => createBookCard(book)).join('');
+        }
+
+        function loadBooks() {
+            const visibleBooks = books.filter(book => book.visible);
+            displayBooks(visibleBooks);
+        }
+
+        function displayBooks(booksToShow) {
+            const booksGrid = document.getElementById('booksGrid');
+            if (booksToShow.length === 0) {
+                booksGrid.innerHTML = '<p style="color: var(--text-secondary); text-align: center; grid-column: 1 / -1;">No books found matching your criteria.</p>';
+                return;
+            }
+            
+            booksGrid.innerHTML = booksToShow.map(book => createBookCard(book)).join('');
+        }
+
+        function createBookCard(book) {
+            const isBookmarked = bookmarks.includes(book.id);
+            const hasNotes = userNotes[book.id];
+            
+            return `
+                <div class="book-card fade-in" data-book-id="${book.id}">
+                    <div class="book-cover">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="book-info">
+                        <div class="book-title">${book.title}</div>
+                        <div class="book-author">by ${book.author}</div>
+                        <div class="book-meta">
+                            <span class="meta-tag">${book.class}</span>
+                            <span class="meta-tag">${book.subject}</span>
+                            <span class="meta-tag">${book.type}</span>
+                        </div>
+                        <div class="book-actions">
+                            <button class="btn btn-primary btn-sm" onclick="downloadBook('${book.id}')">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                            <button class="btn btn-secondary btn-sm" onclick="viewBookDetails('${book.id}')">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                            <button class="btn btn-warning btn-sm" onclick="toggleNotes('${book.id}')">
+                                <i class="fas fa-sticky-note"></i> ${hasNotes ? 'Edit Notes' : 'Add Notes'}
+                            </button>
+                            <button class="bookmark-btn ${isBookmarked ? 'active' : ''}" onclick="toggleBookmark('${book.id}')">
+                                <i class="fas fa-bookmark"></i>
+                            </button>
+                            <button class="btn btn-success btn-sm" onclick="shareBook('${book.id}')">
+                                <i class="fas fa-share"></i> Share
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Book interaction functions
+        function downloadBook(bookId) {
+            const book = books.find(b => b.id === bookId);
+            if (!book) return;
+            
+            // Add to recently viewed
+            if (!recentlyViewed.includes(bookId)) {
+                recentlyViewed.unshift(bookId);
+                recentlyViewed = recentlyViewed.slice(0, 10); // Keep only last 10
+            }
+            
+            // Increment download count
+            book.downloads++;
+            
+            // Update user's download count
+            const user = users.find(u => u.id === currentUser.id);
+            if (user) {
+                user.booksDownloaded++;
+            }
+            
+            // Simulate download
+            showNotification(`Downloading "${book.title}"...`, 'success');
+            
+            // In real implementation, this would trigger actual PDF download
+            // window.open(book.pdfUrl, '_blank');
+            
+            updateStats();
+            loadRecentlyViewed();
+        }
+
+        function viewBookDetails(bookId) {
+            const book = books.find(b => b.id === bookId);
+            if (!book) return;
+            
+            // Add to recently viewed
+            if (!recentlyViewed.includes(bookId)) {
+                recentlyViewed.unshift(bookId);
+                recentlyViewed = recentlyViewed.slice(0, 10);
+            }
+            
+            const modal = document.getElementById('bookDetailsModal');
+            const title = document.getElementById('bookDetailsTitle');
+            const content = document.getElementById('bookDetailsContent');
+            
+            title.textContent = book.title;
+            content.innerHTML = `
+                <div style="display: grid; gap: 1rem;">
+                    <div><strong>Author:</strong> ${book.author}</div>
+                    <div><strong>Class:</strong> ${book.class}</div>
+                    <div><strong>Subject:</strong> ${book.subject}</div>
+                    <div><strong>Type:</strong> ${book.type}</div>
+                    <div><strong>Genre:</strong> ${book.genre}</div>
+                    <div><strong>Downloads:</strong> ${book.downloads}</div>
+                    <div><strong>Description:</strong> ${book.description || 'No description available.'}</div>
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        <button class="btn btn-primary" onclick="downloadBook('${book.id}')">
+                            <i class="fas fa-download"></i> Download PDF
+                        </button>
+                        <button class="btn btn-secondary" onclick="closeModal('bookDetailsModal')">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            showModal('bookDetailsModal');
+            loadRecentlyViewed();
+        }
+
+        function toggleBookmark(bookId) {
+            const index = bookmarks.indexOf(bookId);
+            if (index === -1) {
+                bookmarks.push(bookId);
+                showNotification('Book added to bookmarks!', 'success');
+            } else {
+                bookmarks.splice(index, 1);
+                showNotification('Book removed from bookmarks!', 'warning');
+            }
+            
+            // Update UI
+            loadBooks();
+            loadBookmarks();
+        }
+
+        function toggleNotes(bookId) {
+            const modal = document.getElementById('notesModal');
+            const bookIdInput = document.getElementById('notesBookId');
+            const notesContent = document.getElementById('notesContent');
+            
+            bookIdInput.value = bookId;
+            notesContent.value = userNotes[bookId] || '';
+            
+            showModal('notesModal');
+        }
+
+        function shareBook(bookId) {
+            const book = books.find(b => b.id === bookId);
+            if (!book) return;
+            
+            const shareUrl = `${window.location.origin}?book=${bookId}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: book.title,
+                    text: `Check out this book: ${book.title} by ${book.author}`,
+                    url: shareUrl
+                });
+            } else {
+                // Fallback to clipboard
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    showNotification('Book link copied to clipboard!', 'success');
+                });
+            }
+        }
+
+        function loadBookmarks() {
+            const bookmarksGrid = document.getElementById('bookmarksGrid');
+            const bookmarkedBooks = books.filter(book => bookmarks.includes(book.id) && book.visible);
+            
+            if (bookmarkedBooks.length === 0) {
+                bookmarksGrid.innerHTML = '<p style="color: var(--text-secondary); text-align: center; grid-column: 1 / -1;">No bookmarked books yet. Start exploring and bookmark your favorites!</p>';
+                return;
+            }
+            
+            bookmarksGrid.innerHTML = bookmarkedBooks.map(book => createBookCard(book)).join('');
+        }
+
+        // Search and filter functions
+        function handleSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const classFilter = document.getElementById('classFilter').value;
+            const subjectFilter = document.getElementById('subjectFilter').value;
+            const typeFilter = document.getElementById('typeFilter').value;
+            const genreFilter = document.getElementById('genreFilter').value;
+            
+            let filteredBooks = books.filter(book => book.visible);
+            
+            // Text search
+            if (searchTerm) {
+                filteredBooks = filteredBooks.filter(book =>
+                    book.title.toLowerCase().includes(searchTerm) ||
+                    book.author.toLowerCase().includes(searchTerm) ||
+                    book.description.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // Filters
+            if (classFilter) {
+                filteredBooks = filteredBooks.filter(book => book.class === classFilter);
+            }
+            
+            if (subjectFilter) {
+                filteredBooks = filteredBooks.filter(book => book.subject === subjectFilter);
+            }
+            
+            if (typeFilter) {
+                filteredBooks = filteredBooks.filter(book => book.type === typeFilter);
+            }
+            
+            if (genreFilter) {
+                filteredBooks = filteredBooks.filter(book => book.genre === genreFilter);
+            }
+            
+            displayBooks(filteredBooks);
+        }
+
+        // Admin functions
+        function loadAdminDashboard() {
+            updateStats();
+            loadRecentActivity();
+            loadAnalyticsOverview();
+        }
+
+        function loadRecentActivity() {
+            const recentActivityDiv = document.getElementById('recentActivity');
+            // Simulate recent activity
+            const activities = [
+                { type: 'user_registration', message: 'New user registered: test@example.com', time: '2 hours ago' },
+                { type: 'book_download', message: 'Mathematics Grade 10 downloaded 15 times', time: '4 hours ago' },
+                { type: 'book_added', message: 'New book added: Science Fundamentals', time: '1 day ago' }
+            ];
+            
+            recentActivityDiv.innerHTML = `
+                <div style="max-height: 300px; overflow-y: auto;">
+                    ${activities.map(activity => `
+                        <div style="padding: 0.75rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                            <span>${activity.message}</span>
+                            <small style="color: var(--text-secondary);">${activity.time}</small>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function loadAnalyticsOverview() {
+            const analyticsDiv = document.getElementById('analyticsOverview');
+            analyticsDiv.innerHTML = `
+                <div style="display: grid; gap: 1rem;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Most Downloaded:</span>
+                        <strong>${books.sort((a, b) => b.downloads - a.downloads)[0]?.title || 'N/A'}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Popular Subject:</span>
+                        <strong>Mathematics</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Avg. Downloads/Book:</span>
+                        <strong>${Math.round(books.reduce((sum, book) => sum + book.downloads, 0) / books.length) || 0}</strong>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadBooksManagement() {
+            const booksTable = document.getElementById('booksTable');
+            booksTable.innerHTML = books.map(book => `
+                <tr>
+                    <td>${book.title}</td>
+                    <td>${book.author}</td>
+                    <td>${book.class}</td>
+                    <td>${book.subject}</td>
+                    <td>${book.downloads}</td>
+                    <td>
+                        <label class="toggle-switch">
+                            <input type="checkbox" ${book.visible ? 'checked' : ''} onchange="toggleBookVisibility('${book.id}')">
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" onclick="editBook('${book.id}')">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteBook('${book.id}')">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function loadUsersManagement() {
+            const usersTable = document.getElementById('usersTable');
+            usersTable.innerHTML = users.map(user => `
+                <tr>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${new Date(user.registrationDate).toLocaleDateString()}</td>
+                    <td>${user.booksDownloaded}</td>
+                    <td>
+                        <span class="meta-tag" style="background: ${user.status === 'active' ? 'var(--success-color)' : 'var(--danger-color)'};">
+                            ${user.status}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary btn-sm" onclick="viewUser('${user.id}')">
+                            <i class="fas fa-eye"></i> View
+                        </button>
+                        <button class="btn btn-warning btn-sm" onclick="resetUserPassword('${user.id}')">
+                            <i class="fas fa-key"></i> Reset Password
+                        </button>
+                        <button class="btn btn-danger btn-sm" onclick="toggleUserStatus('${user.id}')">
+                            <i class="fas fa-user-slash"></i> ${user.status === 'active' ? 'Deactivate' : 'Activate'}
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Book management functions
+        function showAddBook() {
+            document.getElementById('bookModalTitle').textContent = 'Add New Book';
+            document.getElementById('bookForm').reset();
+            document.getElementById('bookId').value = '';
+            showModal('bookModal');
+        }
+
+        function editBook(bookId) {
+            const book = books.find(b => b.id === bookId);
+            if (!book) return;
+            
+            document.getElementById('bookModalTitle').textContent = 'Edit Book';
+            document.getElementById('bookId').value = book.id;
+            document.getElementById('bookTitle').value = book.title;
+            document.getElementById('bookAuthor').value = book.author;
+            document.getElementById('bookClass').value = book.class;
+            document.getElementById('bookSubject').value = book.subject;
+            document.getElementById('bookType').value = book.type;
+            document.getElementById('bookGenre').value = book.genre;
+            document.getElementById('bookDescription').value = book.description;
+            document.getElementById('bookPdfUrl').value = book.pdfUrl;
+            
+            showModal('bookModal');
+        }
+
+        function deleteBook(bookId) {
+            if (confirm('Are you sure you want to delete this book?')) {
+                books = books.filter(b => b.id !== bookId);
+                showNotification('Book deleted successfully!', 'success');
+                loadBooksManagement();
+                updateStats();
+            }
+        }
+
+        function toggleBookVisibility(bookId) {
+            const book = books.find(b => b.id === bookId);
+            if (book) {
+                book.visible = !book.visible;
+                showNotification(`Book ${book.visible ? 'made visible' : 'hidden'} successfully!`, 'success');
+                updateStats();
+            }
+        }
+
+        async function handleSaveBook(e) {
+            e.preventDefault();
+            showLoader();
+            
+            const bookId = document.getElementById('bookId').value;
+            const bookData = {
+                title: document.getElementById('bookTitle').value,
+                author: document.getElementById('bookAuthor').value,
+                class: document.getElementById('bookClass').value,
+                subject: document.getElementById('bookSubject').value,
+                type: document.getElementById('bookType').value,
+                genre: document.getElementById('bookGenre').value,
+                description: document.getElementById('bookDescription').value,
+                pdfUrl: document.getElementById('bookPdfUrl').value,
+                visible: true
+            };
+            
+            if (bookId) {
+                // Edit existing book
+                const bookIndex = books.findIndex(b => b.id === bookId);
+                if (bookIndex !== -1) {
+                    books[bookIndex] = { ...books[bookIndex], ...bookData };
+                    showNotification('Book updated successfully!', 'success');
+                }
+            } else {
+                // Add new book
+                const newBook = {
+                    id: Date.now().toString(),
+                    ...bookData,
+                    downloads: 0,
+                    createdAt: new Date().toISOString()
+                };
+                books.push(newBook);
+                showNotification('Book added successfully!', 'success');
+            }
+            
+            closeModal('bookModal');
+            loadBooksManagement();
+            updateStats();
+            hideLoader();
+        }
+
+        // User management functions
+        function viewUser(userId) {
+            const user = users.find(u => u.id === userId);
+            if (!user) return;
+            
+            const userDetails = document.getElementById('userDetails');
+            userDetails.innerHTML = `
+                <div style="display: grid; gap: 1rem;">
+                    <div><strong>Name:</strong> ${user.name}</div>
+                    <div><strong>Email:</strong> ${user.email}</div>
+                    <div><strong>Registration Date:</strong> ${new Date(user.registrationDate).toLocaleDateString()}</div>
+                    <div><strong>Books Downloaded:</strong> ${user.booksDownloaded}</div>
+                    <div><strong>Status:</strong> ${user.status}</div>
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        <button class="btn btn-warning" onclick="resetUserPassword('${user.id}'); closeModal('userModal');">
+                            <i class="fas fa-key"></i> Reset Password
+                        </button>
+                        <button class="btn btn-secondary" onclick="closeModal('userModal')">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            showModal('userModal');
+        }
+
+        function resetUserPassword(userId) {
+            const user = users.find(u => u.id === userId);
+            if (user) {
+                const newPassword = 'temp123';
+                user.password = newPassword;
+                showNotification(`Password reset for ${user.email}. New password: ${newPassword}`, 'success');
+            }
+        }
+
+        function toggleUserStatus(userId) {
+            const user = users.find(u => u.id === userId);
+            if (user) {
+                user.status = user.status === 'active' ? 'inactive' : 'active';
+                showNotification(`User ${user.status === 'active' ? 'activated' : 'deactivated'} successfully!`, 'success');
+                loadUsersManagement();
+            }
+        }
+
+        // Profile management
+        function loadProfile() {
+            if (currentUser) {
+                document.getElementById('profileName').value = currentUser.name;
+                document.getElementById('profileEmail').value = currentUser.email;
+                document.getElementById('profilePassword').value = '';
+                document.getElementById('profileConfirmPassword').value = '';
+            }
+        }
+
+        async function handleUpdateProfile(e) {
+            e.preventDefault();
+            showLoader();
+            
+            const name = document.getElementById('profileName').value;
+            const password = document.getElementById('profilePassword').value;
+            const confirmPassword = document.getElementById('profileConfirmPassword').value;
+            
+            if (password && password !== confirmPassword) {
+                showNotification('Passwords do not match!', 'error');
+                hideLoader();
+                return;
+            }
+            
+            // Update user data
+            const user = users.find(u => u.id === currentUser.id);
+            if (user) {
+                user.name = name;
+                if (password) {
+                    user.password = password;
+                }
+                
+                currentUser.name = name;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                
+                showNotification('Profile updated successfully!', 'success');
+                showUserDashboard();
+            }
+            
+            hideLoader();
+        }
+
+        // Notes management
+        async function handleSaveNotes(e) {
+            e.preventDefault();
+            
+            const bookId = document.getElementById('notesBookId').value;
+            const content = document.getElementById('notesContent').value;
+            
+            if (content.trim()) {
+                userNotes[bookId] = content;
+                showNotification('Notes saved successfully!', 'success');
+            } else {
+                delete userNotes[bookId];
+                showNotification('Notes deleted!', 'warning');
+            }
+            
+            closeModal('notesModal');
+            loadBooks(); // Refresh to update notes button
+        }
+
+        // Utility functions
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function showLoader() {
+            document.getElementById('loader').style.display = 'flex';
+        }
+
+        function hideLoader() {
+            document.getElementById('loader').style.display = 'none';
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'exclamation-triangle'}"></i>
+                    ${message}
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        }
+
+        function updateThemeIcon(theme) {
+            const icon = document.getElementById('themeIcon');
+            icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        // Additional admin functions
+        function showAnnouncements() {
+            showNotification('Announcements management feature will be implemented.', 'info');
+        }
+
+        function showCategories() {
+            showNotification('Categories management feature will be implemented.', 'info');
+        }
+
+        // Initialize some sample data for demonstration
+        setTimeout(() => {
+            if (window.location.search.includes('demo=true')) {
+                // Auto-login as demo user
+                currentUser = {
+                    id: '1',
+                    name: 'Demo User',
+                    email: 'demo@gyansetu.com',
+                    isAdmin: false
+                };
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                showUserDashboard();
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
